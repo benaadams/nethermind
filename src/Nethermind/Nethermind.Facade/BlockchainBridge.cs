@@ -36,6 +36,7 @@ using Nethermind.Core.Eip2930;
 using Nethermind.Core.Specs;
 using Nethermind.Evm.TransactionProcessing;
 using Nethermind.Facade.Filters;
+using Nethermind.Logging;
 using Nethermind.State;
 
 namespace Nethermind.Facade
@@ -56,6 +57,7 @@ namespace Nethermind.Facade
         private readonly IFilterManager _filterManager;
         private readonly IReceiptFinder _receiptFinder;
         private readonly ILogFinder _logFinder;
+        private readonly ILogger _logger;
         private readonly ISpecProvider _specProvider;
 
         public BlockchainBridge(ReadOnlyTxProcessingEnv processingEnv,
@@ -67,6 +69,7 @@ namespace Nethermind.Facade
             ITimestamper? timestamper,
             ILogFinder? logFinder,
             ISpecProvider specProvider,
+            ILogManager logManager,
             bool isMining)
         {
             _processingEnv = processingEnv ?? throw new ArgumentNullException(nameof(processingEnv));
@@ -78,6 +81,7 @@ namespace Nethermind.Facade
             _timestamper = timestamper ?? throw new ArgumentNullException(nameof(timestamper));
             _logFinder = logFinder ?? throw new ArgumentNullException(nameof(logFinder));
             _specProvider = specProvider ?? throw new ArgumentNullException(nameof(specProvider));
+            _logger = logManager.GetClassLogger();
             IsMining = isMining;
         }
 
@@ -330,17 +334,24 @@ namespace Nethermind.Facade
         public void RecoverTxSenders(Block block)
         {
             TxReceipt[] receipts = _receiptFinder.Get(block);
+            _logger.Info($"Got {receipts.Length} from block {block} with tx count {block.Transactions.Length}");
             if (block.Transactions.Length == receipts.Length)
             {
+                int emptySenders = 0;
                 for (int i = 0; i < block.Transactions.Length; i++)
                 {
                     Transaction transaction = block.Transactions[i];
                     TxReceipt receipt = receipts[i];
+                    if (receipt.Sender == null)
+                        ++emptySenders;
                     transaction.SenderAddress ??= receipt.Sender ?? RecoverTxSender(transaction);
                 }
+
+                _logger.Info($"Found {emptySenders} empty senders for block {block} with tx count {block.Transactions.Length}");
             }
             else
             {
+                _logger.Info($"Recovering Sender for all transactions. Block: {block}");
                 for (int i = 0; i < block.Transactions.Length; i++)
                 {
                     Transaction transaction = block.Transactions[i];
