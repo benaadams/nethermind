@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Nethermind.Blockchain;
 using Nethermind.Blockchain.Filters;
 using Nethermind.Blockchain.Find;
@@ -333,8 +334,11 @@ namespace Nethermind.Facade
 
         public void RecoverTxSenders(Block block)
         {
+            Stopwatch getReceipts = new Stopwatch();
+            getReceipts.Start();
             TxReceipt[] receipts = _receiptFinder.Get(block);
-            _logger.Info($"Got {receipts.Length} from block {block} with tx count {block.Transactions.Length}");
+            getReceipts.Stop();
+            _logger.Info($"Got {receipts.Length} from block {block} with tx count {block.Transactions.Length}, TimeElapsed (ms): {getReceipts.ElapsedMilliseconds}");
             if (block.Transactions.Length == receipts.Length)
             {
                 int emptySenders = 0;
