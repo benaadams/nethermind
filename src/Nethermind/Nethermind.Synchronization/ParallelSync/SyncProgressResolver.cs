@@ -87,7 +87,7 @@ namespace Nethermind.Synchronization.ParallelSync
             // In fast sync we never save the state root unless all the descendant nodes have been stored in the DB.
 
             bool result = _stateDb.Get(stateRoot) != null;
-            if (result == false && stateRootIsInMemory)
+            if (result == false && stateRootIsInMemory && (_blockTree.Head?.Number ?? 0  == 0))
             {
                 _logger.Info($"StateRoot {stateRoot} found in memory, but we can't find it in the state database.");
             }
@@ -139,6 +139,11 @@ namespace Nethermind.Synchronization.ParallelSync
 
                 if (IsFullySynced(startHeader.StateRoot!))
                 {
+                    if ((_blockTree.Head?.Number ?? 0) == 0 && startHeader.Number != 0)
+                    {
+                        _logger.Info($"SearchForFullState - state found for header {startHeader}, StateRoot {startHeader.StateRoot}");
+                    }
+
                     bestFullState = startHeader.Number;
                     break;
                 }
