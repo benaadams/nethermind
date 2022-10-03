@@ -179,7 +179,7 @@ public class InitializeNetwork : IStep
         _api.DisposeStack.Push(_api.Synchronizer);
 
         _api.SyncServer = new SyncServer(
-            _api.TrieStore!,
+            _api.DbProvider.StateDb!,
             _api.DbProvider.CodeDb,
             _api.BlockTree!,
             _api.ReceiptStorage!,
