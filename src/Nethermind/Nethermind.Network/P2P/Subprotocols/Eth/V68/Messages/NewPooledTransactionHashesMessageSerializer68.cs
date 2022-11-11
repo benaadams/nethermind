@@ -30,7 +30,7 @@ namespace Nethermind.Network.P2P.Subprotocols.Eth.V68.Messages
             NettyRlpStream rlpStream = new(byteBuffer);
             rlpStream.ReadSequenceLength();
             TxType[] types = rlpStream.DecodeByteArray().Select(v => (TxType)v).ToArray();
-            int[] sizes = rlpStream.DecodeArray(item => item.DecodeInt());
+            uint[] sizes = rlpStream.DecodeArray(item => item.DecodeUInt());
             Keccak[] hashes = rlpStream.DecodeArray(item => item.DecodeKeccak());
             return new NewPooledTransactionHashesMessage68(types, sizes, hashes);
         }
@@ -51,7 +51,7 @@ namespace Nethermind.Network.P2P.Subprotocols.Eth.V68.Messages
             rlpStream.Encode(message.Types.Select(v => (byte)v).ToArray());
 
             rlpStream.StartSequence(sizesLength);
-            foreach (int size in message.Sizes)
+            foreach (uint size in message.Sizes)
             {
                 rlpStream.Encode(size);
             }

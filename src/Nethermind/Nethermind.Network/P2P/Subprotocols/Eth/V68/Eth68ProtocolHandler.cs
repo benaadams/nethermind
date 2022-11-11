@@ -111,7 +111,7 @@ public class Eth68ProtocolHandler : Eth67ProtocolHandler
         }
 
         List<TxType> types = new();
-        List<int> sizes = new();
+        List<uint> sizes = new();
         List<Keccak> hashes = new();
 
         TxDecoder txDecoder = new();
@@ -129,7 +129,7 @@ public class Eth68ProtocolHandler : Eth67ProtocolHandler
             if (tx.Hash is not null)
             {
                 types.Add(tx.Type);
-                sizes.Add(txDecoder.GetLength(tx, RlpBehaviors.None));
+                sizes.Add((uint)txDecoder.GetLength(tx, RlpBehaviors.None));
                 hashes.Add(tx.Hash);
             }
         }
@@ -140,7 +140,7 @@ public class Eth68ProtocolHandler : Eth67ProtocolHandler
         }
     }
 
-    private void SendMessage(IReadOnlyList<TxType> types, IReadOnlyList<int> sizes, IReadOnlyList<Keccak> hashes)
+    private void SendMessage(IReadOnlyList<TxType> types, IReadOnlyList<uint> sizes, IReadOnlyList<Keccak> hashes)
     {
         NewPooledTransactionHashesMessage68 message = new(types, sizes, hashes);
         Metrics.Eth68NewPooledTransactionHashesSent++;
