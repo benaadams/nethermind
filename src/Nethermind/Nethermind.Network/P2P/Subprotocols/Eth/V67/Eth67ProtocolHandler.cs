@@ -45,9 +45,9 @@ public class Eth67ProtocolHandler : Eth66ProtocolHandler
     {
     }
 
-    public override string Name => "eth67";
+    public override string Name => "eth68";
 
-    public override byte ProtocolVersion => 67;
+    public override byte ProtocolVersion => 68;
 
     public override void HandleMessage(ZeroPacket message)
     {
