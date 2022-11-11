@@ -136,7 +136,7 @@ namespace Nethermind.Evm.Test
                                         ShanghaiInstructions.Union(
                                         new Instruction[]
                                             {
-                                                // TODO: Add DATAHASH
+                                                Instruction.DATAHASH
                                             }
                                         )
                                     )
