@@ -25,6 +25,7 @@ using Nethermind.Int256;
 using Nethermind.Logging;
 using Nethermind.State.Snap;
 using Nethermind.Synchronization.Peers;
+using Nethermind.Synchronization.Reporting;
 
 namespace Nethermind.Synchronization.ParallelSync
 {
@@ -113,6 +114,11 @@ namespace Nethermind.Synchronization.ParallelSync
 
             _pivotNumber = _syncConfig.PivotNumberParsed;
             _isSnapSyncDisabledAfterAnyStateSync = _syncProgressResolver.FindBestFullState() != 0;
+
+            Changed += (src, args) =>
+            {
+                ReportSink.CurrentStage = args.Current;
+            };
 
             _ = StartAsync(_cancellation.Token);
         }
