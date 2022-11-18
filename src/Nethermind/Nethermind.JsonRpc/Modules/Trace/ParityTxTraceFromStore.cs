@@ -32,6 +32,11 @@ namespace Nethermind.JsonRpc.Modules.Trace
 
         private static void AddActionsRecursively(List<ParityTxTraceFromStore> results, ParityLikeTxTrace txTrace, ParityTraceAction txTraceAction)
         {
+            if (!txTraceAction.IncludeInTrace)
+            {
+                return;
+            }
+
             ParityTxTraceFromStore result = new()
             {
                 Action = txTraceAction,
