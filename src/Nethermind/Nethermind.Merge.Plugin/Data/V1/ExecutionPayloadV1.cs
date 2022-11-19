@@ -5,6 +5,7 @@ using System;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Int256;
+using Nethermind.Serialization;
 using Nethermind.Serialization.Json;
 using Nethermind.Serialization.Rlp;
 using Nethermind.State.Proofs;
@@ -116,7 +117,7 @@ namespace Nethermind.Merge.Plugin.Data.V1
             Transactions = new byte[transactions.Length][];
             for (int i = 0; i < Transactions.Length; i++)
             {
-                Transactions[i] = Rlp.Encode(transactions[i], RlpBehaviors.SkipTypedWrapping).Bytes;
+                Transactions[i] = MixedEncoding.Encode(transactions[i], RlpBehaviors.SkipTypedWrapping).ToArray();
             }
         }
 
@@ -125,7 +126,7 @@ namespace Nethermind.Merge.Plugin.Data.V1
             Transaction[] transactions = new Transaction[Transactions.Length];
             for (int i = 0; i < Transactions.Length; i++)
             {
-                transactions[i] = Rlp.Decode<Transaction>(Transactions[i], RlpBehaviors.SkipTypedWrapping);
+                transactions[i] = MixedEncoding.Decode<Transaction>(Transactions[i], RlpBehaviors.SkipTypedWrapping);
             }
 
             return transactions;

@@ -95,8 +95,7 @@ namespace Nethermind.Network.P2P.Subprotocols.Eth.V66
                     Handle(getPooledTxMsg);
                     break;
                 case Eth66MessageCode.PooledTransactions:
-                    PooledTransactionsMessage pooledTxMsg
-                        = Deserialize<PooledTransactionsMessage>(message.Content);
+                    PooledTransactionsMessage pooledTxMsg = Deserialize<PooledTransactionsMessage>(message.Content);
                     Metrics.Eth66PooledTransactionsReceived++;
                     ReportIn(pooledTxMsg);
                     Handle(pooledTxMsg.EthMessage);

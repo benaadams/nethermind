@@ -52,5 +52,11 @@ namespace Nethermind.Merge.Plugin
             IsSharable = true,
             IsImplemented = true)]
         ResultWrapper<TransitionConfigurationV1> engine_exchangeTransitionConfigurationV1(TransitionConfigurationV1 beaconTransitionConfiguration);
+
+        [JsonRpcMethod(
+            Description = "Returns blob data of an execution payload with respect to the transaction set contained by the mempool.",
+            IsSharable = true,
+            IsImplemented = true)]
+        Task<ResultWrapper<BlobsBundleV1?>> engine_getBlobsBundleV1(byte[] payloadId);
     }
 }

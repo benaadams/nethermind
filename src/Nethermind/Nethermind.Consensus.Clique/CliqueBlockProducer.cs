@@ -428,6 +428,8 @@ public class CliqueBlockProducer : ICliqueBlockProducer, IDisposable
         Block block = new BlockToProduce(header, selectedTxs, Array.Empty<BlockHeader>());
         header.TxRoot = new TxTrie(block.Transactions).RootHash;
         block.Header.Author = _sealer.Address;
+        header.ExcessDataGas = Evm.IntrinsicGasCalculator.CalcExcessDataGas(parentBlock.ExcessDataGas, block.Transactions.Sum(x=>x.BlobVersionedHashes.Length));
+        header.ParentExcessDataGas = parentHeader.ParentExcessDataGas;
         return block;
     }
 

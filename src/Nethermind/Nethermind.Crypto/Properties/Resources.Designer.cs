@@ -64,11 +64,11 @@ namespace Nethermind.Crypto.Properties {
         ///   Looks up a localized string similar to 4096
         ///65
         ///97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb
-        ///8dfccb39e978918d36461c8aa55bfab4611150bc625f817eda53517504cf903f4dff56e0ad31dc03dac54a1ebeef28cc
-        ///95329445157a70981627d6e328c30c0831bff52dd7f84d9df011a496a04efa8e244bbf04f614eed6c4352d17d695a33d
-        ///a5b80a56ddb1883eb24a502458d0f5e0d7618ab20ba6ff979460ac6ba6eb81545a69ed906e0a67691764e306ad19f5c1
-        ///9514476eddf18934c9883f7758561d83e6c2be3f1e95857dc2846dd75dba0f20fda791e0dff91f34a398eec46a14369f
-        ///8afd521a668e0af4c9d [rest of string was truncated]&quot;;.
+        ///854262641262cb9e056a8512808ea6864d903dbcad713fd6da8dddfa5ce40d85612c912063ace060ed8c4bf005bab839
+        ///86f708eee5ae0cf40be36993e760d9cb3b2371f22db3209947c5d21ea68e55186b30871c50bf11ef29e5248bf42d5678
+        ///94f9c0bafb23cbbf34a93a64243e3e0f934b57593651f3464de7dc174468123d9698f1b9dfa22bb5b6eb96eae002f29f
+        ///82b8775b874067bdd4479ac237f8d56036a742c17901354caaf38bf8c70e696650fbec76f0cd941ed8c658f44ea359ff
+        ///a7ce299c79c7d7e4f1a [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string kzg_trusted_setup {
             get {

@@ -1,7 +1,10 @@
 // SPDX-FileCopyrightText: 2022 Demerzel Solutions Limited
 // SPDX-License-Identifier: LGPL-3.0-only
 
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using Nethermind.Core;
 using Nethermind.Dirichlet.Numerics;
 
 namespace Nethermind.Merkleization
@@ -21,6 +24,5 @@ namespace Nethermind.Merkleization
             merkleizer.FeedBitlist(value, maximumBitlistLength);
             merkleizer.CalculateRoot(out root);
         }
-
     }
 }

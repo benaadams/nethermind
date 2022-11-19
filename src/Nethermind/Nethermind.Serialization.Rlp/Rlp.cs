@@ -5,6 +5,7 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
@@ -219,8 +220,15 @@ namespace Nethermind.Serialization.Rlp
 
         public static Rlp Encode(Transaction transaction)
         {
-            return Encode(transaction, false);
+           // return transaction.Type == TxType.Blob ? Encode4844(transaction) :
+                return Encode(transaction, false);
         }
+
+
+        //public static Rlp Encode(
+        //    Transaction transaction)
+        //{
+        //}
 
         public static Rlp Encode(
             Transaction transaction,
@@ -1418,6 +1426,11 @@ namespace Nethermind.Serialization.Rlp
             item.ToBigEndian(bytes);
             int length = bytes.WithoutLeadingZeros().Length;
             return length + 1;
+        }
+
+        public static int LengthOf(ulong[] value)
+        {
+            return Rlp.LengthOfSequence(value.Select(x => Rlp.LengthOf(x)).Sum());
         }
 
         public static int LengthOf(uint _)

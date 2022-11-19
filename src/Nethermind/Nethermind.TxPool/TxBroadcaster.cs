@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using Nethermind.Core;
@@ -232,7 +233,12 @@ namespace Nethermind.TxPool
         {
             try
             {
+                if (txs.Any())
+                {
+
+                }
                 peer.SendNewTransactions(txs, sendFullTx);
+                
                 if (_logger.IsTrace) _logger.Trace($"Notified {peer} about transactions.");
             }
             catch (Exception e)

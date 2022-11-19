@@ -3,12 +3,13 @@
 
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Serialization;
 using Nethermind.Serialization.Rlp;
 
 namespace Nethermind.Crypto
 {
     public static class TransactionExtensions
     {
-        public static Keccak CalculateHash(this Transaction transaction) => Keccak.Compute(Rlp.Encode(transaction).Bytes);
+        public static Keccak CalculateHash(this Transaction transaction) => MixedEncoding.ComputeHash<Transaction>(transaction);
     }
 }

@@ -208,7 +208,7 @@ namespace Nethermind.Serialization.Rlp.Eip2930
                     foreach (UInt256 index in indexes)
                     {
                         // storage indices are encoded as 32 bytes data arrays
-                        stream.Encode(index, 32);
+                        stream.Encode(index);
                     }
                 }
             }

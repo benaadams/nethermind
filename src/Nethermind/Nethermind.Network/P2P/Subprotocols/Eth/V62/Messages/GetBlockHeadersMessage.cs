@@ -10,6 +10,10 @@ namespace Nethermind.Network.P2P.Subprotocols.Eth.V62.Messages
     [DebuggerDisplay("{StartBlockHash} {MaxHeaders} {Skip} {Reverse}")]
     public class GetBlockHeadersMessage : P2PMessage
     {
+        public GetBlockHeadersMessage()
+        {
+
+        }
         public override int PacketType { get; } = Eth62MessageCode.GetBlockHeaders;
         public override string Protocol { get; } = "eth";
 

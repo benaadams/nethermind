@@ -9,7 +9,7 @@ using Nethermind.Core2.Types;
 
 namespace Nethermind.Ssz
 {
-    public partial class Ssz
+    public static partial class Ssz
     {
         public const int CommitteeIndexLength = sizeof(ulong);
 

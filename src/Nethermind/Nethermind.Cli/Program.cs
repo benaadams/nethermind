@@ -42,7 +42,7 @@ namespace Nethermind.Cli
             ModuleLoader.DiscoverAndLoadModules();
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler(ModuleLoader);
 
-            NodeManager.SwitchUri(new Uri("http://localhost:8545"));
+            NodeManager.SwitchUri(new Uri("http://localhost:8547"));
             HistoryManager.Init();
             TestConnection();
             CliConsole.WriteLine();

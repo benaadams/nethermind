@@ -20,7 +20,7 @@ namespace Nethermind.Core
     {
         public const string NetworkDiagTracerPath = @"network_diag.txt";
 
-        public static bool IsEnabled { get; set; }
+        public static bool IsEnabled { get { return true;  } set { } }
 
         private static readonly ConcurrentDictionary<string, ConcurrentQueue<string>> _events = new();
         private static ILogger? _logger;
@@ -50,7 +50,7 @@ namespace Nethermind.Core
             _events.Clear();
 
             string contents = stringBuilder.ToString();
-            File.WriteAllText(NetworkDiagTracerPath, contents);
+            //File.WriteAllText(NetworkDiagTracerPath, contents);
             _logger?.Info(contents);
         }
 

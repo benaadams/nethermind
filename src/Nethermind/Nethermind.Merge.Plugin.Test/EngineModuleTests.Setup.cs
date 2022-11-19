@@ -63,6 +63,9 @@ namespace Nethermind.Merge.Plugin.Test
                 new GetPayloadV1Handler(
                     chain.PayloadPreparationService!,
                     chain.LogManager),
+                new GetBlobsBundleV1Handler(
+                    chain.PayloadPreparationService!,
+                    chain.LogManager),
                 new NewPayloadV1Handler(
                     chain.BlockValidator,
                     chain.BlockTree,

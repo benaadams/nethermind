@@ -115,39 +115,40 @@ namespace Nethermind.Serialization.Rlp
             ulong timestamp = rlpStream.DecodeULong();
             byte[]? extraData = rlpStream.DecodeByteArray();
 
-            BlockHeader blockHeader = new(
-                parentHash,
-                unclesHash,
-                beneficiary,
-                difficulty,
-                number,
-                gasLimit,
-                timestamp,
-                extraData)
+                BlockHeader blockHeader = new(
+                    parentHash,
+                    unclesHash,
+                    beneficiary,
+                    difficulty,
+                    number,
+                    gasLimit,
+                    timestamp,
+                    extraData)
+                {
+                    StateRoot = stateRoot,
+                    TxRoot = transactionsRoot,
+                    ReceiptsRoot = receiptsRoot,
+                    Bloom = bloom,
+                    GasUsed = gasUsed,
+                    Hash = Keccak.Compute(headerRlp)
+                };
+            try
             {
-                StateRoot = stateRoot,
-                TxRoot = transactionsRoot,
-                ReceiptsRoot = receiptsRoot,
-                Bloom = bloom,
-                GasUsed = gasUsed,
-                Hash = Keccak.Compute(headerRlp)
-            };
+                if (rlpStream.PeekPrefixAndContentLength().ContentLength == Keccak.Size)
+                {
+                    blockHeader.MixHash = rlpStream.DecodeKeccak();
+                    blockHeader.Nonce = (ulong)rlpStream.DecodeUBigInt();
+                }
+                else
+                {
+                    blockHeader.AuRaStep = (long)rlpStream.DecodeUInt256();
+                    blockHeader.AuRaSignature = rlpStream.DecodeByteArray();
+                }
 
-            if (rlpStream.PeekPrefixAndContentLength().ContentLength == Keccak.Size)
-            {
-                blockHeader.MixHash = rlpStream.DecodeKeccak();
-                blockHeader.Nonce = (ulong)rlpStream.DecodeUBigInt();
-            }
-            else
-            {
-                blockHeader.AuRaStep = (long)rlpStream.DecodeUInt256();
-                blockHeader.AuRaSignature = rlpStream.DecodeByteArray();
-            }
-
-            if (blockHeader.Number >= Eip1559TransitionBlock)
-            {
-                blockHeader.BaseFeePerGas = rlpStream.DecodeUInt256();
-            }
+                if (blockHeader.Number >= Eip1559TransitionBlock)
+                {
+                    blockHeader.BaseFeePerGas = rlpStream.DecodeUInt256();
+                }
 
             if (blockHeader.Timestamp >= Eip4844TransitionTimestamp)
             {
@@ -159,7 +160,13 @@ namespace Nethermind.Serialization.Rlp
                 rlpStream.Check(headerCheck);
             }
 
-            return blockHeader;
+                return blockHeader;
+            }
+            catch(Exception ee)
+            {
+                Console.WriteLine(ee);
+                throw;
+            }
         }
 
         public void Encode(RlpStream rlpStream, BlockHeader? header, RlpBehaviors rlpBehaviors = RlpBehaviors.None)

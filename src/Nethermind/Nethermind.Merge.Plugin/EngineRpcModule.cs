@@ -18,6 +18,7 @@ namespace Nethermind.Merge.Plugin
     public class EngineRpcModule : IEngineRpcModule
     {
         private readonly IAsyncHandler<byte[], ExecutionPayloadV1?> _getPayloadHandlerV1;
+        private readonly IAsyncHandler<byte[], BlobsBundleV1?> _getBlobsBundleV1Handler;
         private readonly IAsyncHandler<ExecutionPayloadV1, PayloadStatusV1> _newPayloadV1Handler;
         private readonly IForkchoiceUpdatedV1Handler _forkchoiceUpdatedV1Handler;
         private readonly IHandler<ExecutionStatusResult> _executionStatusHandler;
@@ -29,6 +30,7 @@ namespace Nethermind.Merge.Plugin
 
         public EngineRpcModule(
             IAsyncHandler<byte[], ExecutionPayloadV1?> getPayloadHandlerV1,
+            IAsyncHandler<byte[], BlobsBundleV1?> getBlobsBundleV1Handler,
             IAsyncHandler<ExecutionPayloadV1, PayloadStatusV1> newPayloadV1Handler,
             IForkchoiceUpdatedV1Handler forkchoiceUpdatedV1Handler,
             IHandler<ExecutionStatusResult> executionStatusHandler,
@@ -37,6 +39,7 @@ namespace Nethermind.Merge.Plugin
             ILogManager logManager)
         {
             _getPayloadHandlerV1 = getPayloadHandlerV1;
+            _getBlobsBundleV1Handler = getBlobsBundleV1Handler;
             _newPayloadV1Handler = newPayloadV1Handler;
             _forkchoiceUpdatedV1Handler = forkchoiceUpdatedV1Handler;
             _executionStatusHandler = executionStatusHandler;
@@ -53,6 +56,11 @@ namespace Nethermind.Merge.Plugin
         public async Task<ResultWrapper<ExecutionPayloadV1?>> engine_getPayloadV1(byte[] payloadId)
         {
             return await (_getPayloadHandlerV1.HandleAsync(payloadId));
+        }
+
+        public async Task<ResultWrapper<BlobsBundleV1?>> engine_getBlobsBundleV1(byte[] payloadId)
+        {
+            return await (_getBlobsBundleV1Handler.HandleAsync(payloadId));
         }
 
         public async Task<ResultWrapper<PayloadStatusV1>> engine_newPayloadV1(ExecutionPayloadV1 executionPayload)

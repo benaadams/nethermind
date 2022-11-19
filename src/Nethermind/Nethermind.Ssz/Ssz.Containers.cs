@@ -11,7 +11,7 @@ using Nethermind.Core2.Types;
 
 namespace Nethermind.Ssz
 {
-    public partial class Ssz
+    public static partial class Ssz
     {
         private const int VarOffsetSize = sizeof(uint);
 

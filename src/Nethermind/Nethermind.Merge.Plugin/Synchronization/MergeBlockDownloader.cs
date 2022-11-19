@@ -79,8 +79,10 @@ namespace Nethermind.Merge.Plugin.Synchronization
             {
                 if (_logger.IsDebug)
                     _logger.Debug("Using pre merge block downloader");
+                _logger.Warn("~~~~~~~~~~~~~~~ PREMERGE BLOCK LOADING");
                 return await base.DownloadBlocks(bestPeer, blocksRequest, cancellation);
             }
+            _logger.Warn("~~~~~~~~~~~~~~~ POSTMERGE BLOCK LOADING");
 
             if (bestPeer is null)
             {
@@ -297,15 +299,19 @@ namespace Nethermind.Merge.Plugin.Synchronization
             BlockHeader[] response = await base.RequestHeaders(peer, cancellation, currentNumber, headersToRequest);
             if (response.Length > 0)
             {
-                BlockHeader lastBlockHeader = response[^1];
-                bool lastBlockIsPostMerge = _poSSwitcher.GetBlockConsensusInfo(response[^1]).IsPostMerge;
-                if (lastBlockIsPostMerge) // Initial check to prevent creating new array every time
-                {
-                    response = response
-                        .TakeWhile((header) => !_poSSwitcher.GetBlockConsensusInfo(header).IsPostMerge)
-                        .ToArray();
-                    if (_logger.IsInfo) _logger.Info($"Last block is post merge. {lastBlockHeader.Hash}. Trimming to {response.Length} sized batch.");
-                }
+               BlockHeader lastBlockHeader = response[^1];
+               bool lastBlockIsPostMerge = _poSSwitcher.GetBlockConsensusInfo(response[^1]).IsPostMerge;
+               if (lastBlockIsPostMerge) // Initial check to prevent creating new array every time
+               {
+                   //if(response.Any(x=>x.Number == 0 && x.Difficulty == 0))
+                   // {
+                   //     beconpivo
+                   // }
+                   response = response
+                       .TakeWhile((header) => !_poSSwitcher.GetBlockConsensusInfo(header).IsPostMerge)
+                       .ToArray();
+                   if (_logger.IsInfo) _logger.Info($"Last block is post merge. {lastBlockHeader.Hash}. Trimming to {response.Length} sized batch.");
+               }
             }
             return response;
         }

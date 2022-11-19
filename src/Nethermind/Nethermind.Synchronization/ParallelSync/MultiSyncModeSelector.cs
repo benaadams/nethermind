@@ -256,10 +256,11 @@ namespace Nethermind.Synchronization.ParallelSync
 
         private void UpdateSyncModes(SyncMode newModes, string? reason = null)
         {
-            if (_logger.IsTrace)
+            //if (_logger.IsTrace)
             {
                 string message = $"Changing state to {newModes} | {reason}";
-                if (_logger.IsTrace) _logger.Trace(message);
+               // if (_logger.IsTrace)
+                    _logger.Warn(message);
             }
 
             SyncMode previous = Current;
@@ -703,7 +704,7 @@ namespace Nethermind.Synchronization.ParallelSync
 
             bool result = checks.All(c => c.IsSatisfied);
             string text = $"{(result ? " * " : "   ")}{syncType.PadRight(20)}: yes({string.Join(", ", matched)}), no({string.Join(", ", failed)})";
-            _logger.Trace(text);
+            _logger.Warn(text);
         }
 
         private ref struct Snapshot

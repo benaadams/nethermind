@@ -55,6 +55,7 @@ namespace Nethermind.Runner
 
         public static void Main(string[] args)
         {
+            if(Directory.Exists("D:/db"))Directory.Delete("D:/db", true);
             AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
             {
                 ILogger logger = GetCriticalLogger();

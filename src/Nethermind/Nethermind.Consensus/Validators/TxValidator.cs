@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2022 Demerzel Solutions Limited
 // SPDX-License-Identifier: LGPL-3.0-only
 
+using System;
 using System.Numerics;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
@@ -30,6 +31,12 @@ namespace Nethermind.Consensus.Validators
            just before the execution of the block / tx. */
         public bool IsWellFormed(Transaction transaction, IReleaseSpec releaseSpec)
         {
+            Console.WriteLine(@$"ValidateTxType(transaction, releaseSpec) && // {ValidateTxType(transaction, releaseSpec)}
+                   transaction.GasLimit >= IntrinsicGasCalculator.Calculate(transaction, releaseSpec) && // {transaction.GasLimit}>{IntrinsicGasCalculator.Calculate(transaction, releaseSpec)} {transaction.GasLimit}>{IntrinsicGasCalculator.Calculate(transaction, releaseSpec)}
+                   ValidateSignature(transaction.Signature, releaseSpec) && // {ValidateSignature(transaction.Signature, releaseSpec)}
+                   ValidateChainId(transaction) && // {ValidateChainId(transaction)}
+                   Validate1559GasFields(transaction, releaseSpec) && // {Validate1559GasFields(transaction, releaseSpec)}
+                   Validate4844GasFields(transaction, releaseSpec); // {Validate4844Fields(transaction, releaseSpec)}");
             // validate type before calculating intrinsic gas to avoid exception
             return ValidateTxType(transaction, releaseSpec) &&
                    /* This is unnecessarily calculated twice - at validation and execution times. */
@@ -112,8 +119,11 @@ namespace Nethermind.Consensus.Validators
 
         private bool Validate4844Fields(Transaction transaction)
         {
-            // TODO: Add blobs validation
-            return transaction.Type != TxType.Blob ^ transaction.MaxFeePerDataGas is not null;
+            return transaction.Type != TxType.Blob ||
+                (
+                    transaction.MaxFeePerDataGas is not null &&
+                    KzgPolynomialCommitments.IsAggregatedProofValid(transaction.Proof, transaction.Blobs, transaction.BlobKzgs)
+                );
         }
     }
 }

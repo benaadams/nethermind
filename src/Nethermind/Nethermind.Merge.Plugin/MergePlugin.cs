@@ -312,6 +312,7 @@ namespace Nethermind.Merge.Plugin
 
                 IEngineRpcModule engineRpcModule = new EngineRpcModule(
                     new GetPayloadV1Handler(payloadPreparationService, _api.LogManager),
+                    new GetBlobsBundleV1Handler(payloadPreparationService, _api.LogManager),
                     new NewPayloadV1Handler(
                         _api.BlockValidator,
                         _api.BlockTree,

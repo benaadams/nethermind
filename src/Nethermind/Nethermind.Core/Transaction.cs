@@ -106,6 +106,7 @@ namespace Nethermind.Core
         }
 
         public override string ToString() => ToString(string.Empty);
+
     }
 
     /// <summary>

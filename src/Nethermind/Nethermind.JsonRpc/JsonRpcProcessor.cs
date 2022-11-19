@@ -264,14 +264,14 @@ namespace Nethermind.JsonRpc
 
         private void TraceResult(JsonRpcResponse response)
         {
-            if (_logger.IsTrace)
+            if (_logger.IsInfo)
             {
                 StringBuilder builder = new();
                 using StringWriter stringWriter = new(builder);
                 using JsonTextWriter jsonWriter = new(stringWriter);
                 _traceSerializer.Serialize(jsonWriter, response);
 
-                _logger.Trace($"Sending JSON RPC response: {builder}");
+                _logger.Info($"Sending JSON RPC response: {builder}");
             }
         }
 
