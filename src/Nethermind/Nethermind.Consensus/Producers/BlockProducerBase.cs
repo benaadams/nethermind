@@ -296,7 +296,7 @@ namespace Nethermind.Consensus.Producers
             header.TotalDifficulty = parent.TotalDifficulty + difficulty;
 
             if (Logger.IsDebug) Logger.Debug($"Setting total difficulty to {parent.TotalDifficulty} + {difficulty}.");
-            header.BaseFeePerGas = BaseFeeCalculator.Calculate(parent, _specProvider.GetSpec(header.Number));
+            header.BaseFeePerGas = BaseFeeCalculator.Calculate(parent, _specProvider.GetSpec(header));
             return header;
         }
 
@@ -308,7 +308,7 @@ namespace Nethermind.Consensus.Producers
 
             header.ExcessDataGas = IntrinsicGasCalculator.CalcExcessDataGas(parent.ExcessDataGas, transactions.Sum(x => x.BlobVersionedHashes?.Length ?? 0));
             header.ParentExcessDataGas = parent.ParentExcessDataGas;
-            return new BlockToProduce(header, transactions, Array.Empty<BlockHeader>());
+            return new BlockToProduce(header, transactions, Array.Empty<BlockHeader>(), payloadAttributes?.Withdrawals);
         }
     }
 }

@@ -133,6 +133,8 @@ namespace Nethermind.Specs.Test
             }
         }
 
+        public ulong WithdrawalTimestamp => _spec.WithdrawalTimestamp;
+
         private ulong? _overridenEip4844TransitionTimeStamp;
         public ulong Eip4844TransitionTimestamp
         {
@@ -152,5 +154,6 @@ namespace Nethermind.Specs.Test
         public bool IsEip3651Enabled => _spec.IsEip3651Enabled;
         public bool IsEip3855Enabled => _spec.IsEip3855Enabled;
         public bool IsEip3860Enabled => _spec.IsEip3860Enabled;
+        public bool IsEip4895Enabled => _spec.IsEip4895Enabled;
     }
 }

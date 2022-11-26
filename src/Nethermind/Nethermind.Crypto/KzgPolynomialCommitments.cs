@@ -3,6 +3,8 @@
 
 using System;
 using System.IO;
+using System.Security.Cryptography;
+using System.Threading;
 using Nethermind.Core.Crypto;
 using Nethermind.Crypto.Properties;
 using Nethermind.Int256;
@@ -88,7 +90,7 @@ namespace Nethermind.Crypto
             }
             fixed (byte* commitmentsPtr = flattenCommitments, blobsPtr = flattenBlobs, proofPtr = proof)
             {
-                return Ckzg.Ckzg.VerifyAggregatedKzgProof(blobsPtr, commitmentsPtr, blobs.Length, proofPtr, CkzgSetup) == 0;
+                return Ckzg.Ckzg.VerifyAggregatedKzgProof(blobsPtr, commitmentsPtr, blobs.Length, proofPtr, _ckzgSetup) == 0;
             }
         }
     }

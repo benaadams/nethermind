@@ -116,6 +116,7 @@ namespace Nethermind.Specs
         }
 
         public long Eip1559TransitionBlock => _spec.Eip1559TransitionBlock;
+        public ulong WithdrawalTimestamp => _spec.WithdrawalTimestamp;
 
         public ulong Eip4844TransitionTimestamp => _spec.Eip4844TransitionTimestamp;
 
@@ -125,5 +126,6 @@ namespace Nethermind.Specs
         public bool IsEip3651Enabled => _spec.IsEip3651Enabled;
         public bool IsEip3855Enabled => _spec.IsEip3855Enabled;
         public bool IsEip3860Enabled => _spec.IsEip3860Enabled;
+        public bool IsEip4895Enabled => _spec.IsEip4895Enabled;
     }
 }

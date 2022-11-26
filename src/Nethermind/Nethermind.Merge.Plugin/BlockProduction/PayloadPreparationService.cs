@@ -13,14 +13,14 @@ using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Timers;
 using Nethermind.Logging;
-using Nethermind.Merge.Plugin.Handlers.V1;
+using Nethermind.Merge.Plugin.Handlers;
 
 namespace Nethermind.Merge.Plugin.BlockProduction
 {
     /// <summary>
-    /// A cache of pending payloads. A payload is created whenever a consensus client requests a payload creation in <see cref="ForkchoiceUpdatedV1Handler"/>.
+    /// A cache of pending payloads. A payload is created whenever a consensus client requests a payload creation in <see cref="ForkchoiceUpdatedHandler"/>.
     /// <seealso cref="https://github.com/ethereum/execution-apis/blob/main/src/engine/specification.md#engine_forkchoiceupdatedv1"/>
-    /// Each payload is assigned a payloadId which can be used by the consensus client to retrieve payload later by calling a <see cref="GetPayloadV1Handler"/>.
+    /// Each payload is assigned a payloadId which can be used by the consensus client to retrieve payload later by calling a <see cref="GetPayloadHandler"/>.
     /// <seealso cref="https://github.com/ethereum/execution-apis/blob/main/src/engine/specification.md#engine_getpayloadv1"/>
     /// </summary>
     public class PayloadPreparationService : IPayloadPreparationService

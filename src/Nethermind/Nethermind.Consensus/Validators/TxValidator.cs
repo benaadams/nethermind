@@ -36,7 +36,7 @@ namespace Nethermind.Consensus.Validators
                    ValidateSignature(transaction.Signature, releaseSpec) && // {ValidateSignature(transaction.Signature, releaseSpec)}
                    ValidateChainId(transaction) && // {ValidateChainId(transaction)}
                    Validate1559GasFields(transaction, releaseSpec) && // {Validate1559GasFields(transaction, releaseSpec)}
-                   Validate4844GasFields(transaction, releaseSpec); // {Validate4844Fields(transaction, releaseSpec)}");
+                   Validate4844GasFields(transaction, releaseSpec); // {Validate4844Fields(transaction)}");
             // validate type before calculating intrinsic gas to avoid exception
             return ValidateTxType(transaction, releaseSpec) &&
                    /* This is unnecessarily calculated twice - at validation and execution times. */

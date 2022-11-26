@@ -6,7 +6,7 @@ using Nethermind.Core;
 using Nethermind.Serialization;
 using Nethermind.Serialization.Rlp;
 
-namespace Nethermind.Merge.Plugin.Data.V1
+namespace Nethermind.Merge.Plugin.Data
 {
 
     public class ExecutionPayloadBodyV1Result

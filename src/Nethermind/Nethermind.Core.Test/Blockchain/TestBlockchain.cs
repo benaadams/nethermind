@@ -15,6 +15,7 @@ using Nethermind.Consensus.Producers;
 using Nethermind.Consensus.Rewards;
 using Nethermind.Consensus.Transactions;
 using Nethermind.Consensus.Validators;
+using Nethermind.Consensus.Withdrawals;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
@@ -264,7 +265,7 @@ namespace Nethermind.Core.Test.Blockchain
         protected virtual TxPool.TxPool CreateTxPool() =>
             new(
                 EthereumEcdsa,
-                new ChainHeadInfoProvider(new FixedBlockChainHeadSpecProvider(SpecProvider), BlockTree, ReadOnlyState),
+                new ChainHeadInfoProvider(new FixedForkActivationChainHeadSpecProvider(SpecProvider), BlockTree, ReadOnlyState),
                 new TxPoolConfig(),
                 new TxValidator(SpecProvider.ChainId),
                 LogManager,
@@ -313,6 +314,7 @@ namespace Nethermind.Core.Test.Blockchain
                 Storage,
                 ReceiptStorage,
                 NullWitnessCollector.Instance,
+                new ValidationWithdrawalProcessor(State, LogManager),
                 LogManager);
 
         public async Task WaitForNewHead()

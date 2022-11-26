@@ -28,7 +28,7 @@ using Nethermind.State.Proofs;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Nethermind.Merge.Plugin.Data.V1
+namespace Nethermind.Merge.Plugin.Data
 {
     /// <summary>
     /// A data object representing a block as being sent from the execution layer to the consensus layer.

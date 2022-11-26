@@ -25,7 +25,6 @@ using Nethermind.Logging;
 using Nethermind.Merge.Plugin.BlockProduction;
 using Nethermind.Merge.Plugin.BlockProduction.Boost;
 using Nethermind.Merge.Plugin.Handlers;
-using Nethermind.Merge.Plugin.Handlers.V1;
 using Nethermind.Merge.Plugin.InvalidChainTracker;
 using Nethermind.Merge.Plugin.Synchronization;
 using Nethermind.Synchronization.ParallelSync;
@@ -311,9 +310,9 @@ namespace Nethermind.Merge.Plugin
                     TimeSpan.FromSeconds(_mergeConfig.SecondsPerSlot));
 
                 IEngineRpcModule engineRpcModule = new EngineRpcModule(
-                    new GetPayloadV1Handler(payloadPreparationService, _api.LogManager),
+                    new GetPayloadHandler(payloadPreparationService, _api.LogManager),
                     new GetBlobsBundleV1Handler(payloadPreparationService, _api.LogManager),
-                    new NewPayloadV1Handler(
+                    new NewPayloadHandler(
                         _api.BlockValidator,
                         _api.BlockTree,
                         _api.Config<IInitConfig>(),
@@ -327,7 +326,7 @@ namespace Nethermind.Merge.Plugin
                         _beaconSync,
                         _api.SpecProvider,
                         _api.LogManager),
-                    new ForkchoiceUpdatedV1Handler(
+                    new ForkchoiceUpdatedHandler(
                         _api.BlockTree,
                         _blockFinalizationManager,
                         _poSSwitcher,
@@ -338,6 +337,7 @@ namespace Nethermind.Merge.Plugin
                         _beaconSync,
                         _beaconPivot,
                         _peerRefresher,
+                        _api.SpecProvider,
                         _api.LogManager),
                     new ExecutionStatusHandler(_api.BlockTree),
                     new GetPayloadBodiesV1Handler(_api.BlockTree, _api.LogManager),

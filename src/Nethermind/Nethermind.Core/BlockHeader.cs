@@ -51,7 +51,6 @@ namespace Nethermind.Core
         }
 
         public WeakReference<BlockHeader>? MaybeParent { get; set; }
-
         public bool IsGenesis => Number == 0L;
         public Keccak? ParentHash { get; set; }
         public Keccak? UnclesHash { get; set; }
@@ -77,9 +76,13 @@ namespace Nethermind.Core
         public byte[]? AuRaSignature { get; set; }
         public long? AuRaStep { get; set; }
         public UInt256 BaseFeePerGas { get; set; }
+        public Keccak? WithdrawalsRoot { get; set; }
         public UInt256? ExcessDataGas { get; set; }
+        public UInt256 ParentExcessDataGas { get; set; } = UInt256.MaxValue;
 
-        public bool HasBody => UnclesHash != Keccak.OfAnEmptySequenceRlp || TxRoot != Keccak.EmptyTreeHash;
+        public bool HasBody => TxRoot != Keccak.EmptyTreeHash
+                               || UnclesHash != Keccak.OfAnEmptySequenceRlp;
+
         public string SealEngineType { get; set; } = Core.SealEngineType.Ethash;
 
         // ToDo we need to set this flag after reading block from db
@@ -104,6 +107,7 @@ namespace Nethermind.Core
             builder.AppendLine($"{indent}Receipts Root: {ReceiptsRoot}");
             builder.AppendLine($"{indent}State Root: {StateRoot}");
             builder.AppendLine($"{indent}BaseFeePerGas: {BaseFeePerGas}");
+            builder.AppendLine($"{indent}Withdrawals Root: {WithdrawalsRoot}");
             if (ExcessDataGas is not null)
             {
                 builder.AppendLine($"{indent}ExcessDataGas: {ExcessDataGas}");
@@ -114,23 +118,14 @@ namespace Nethermind.Core
             return builder.ToString();
         }
 
-        public override string ToString()
-        {
-            return ToString(string.Empty);
-        }
+        public override string ToString() => ToString(string.Empty);
 
-        public string ToString(Format format)
+        public string ToString(Format format) => format switch
         {
-            switch (format)
-            {
-                case Format.Full:
-                    return ToString(string.Empty);
-                case Format.FullHashAndNumber:
-                    return Hash is null ? $"{Number} null" : $"{Number} ({Hash})";
-                default:
-                    return Hash is null ? $"{Number} null" : $"{Number} ({Hash.ToShortString()})";
-            }
-        }
+            Format.Full => ToString(string.Empty),
+            Format.FullHashAndNumber => Hash is null ? $"{Number} null" : $"{Number} ({Hash})",
+            _ => Hash is null ? $"{Number} null" : $"{Number} ({Hash.ToShortString()})",
+        };
 
         [Todo(Improve.Refactor, "Use IFormattable here")]
         public enum Format

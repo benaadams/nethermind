@@ -101,7 +101,7 @@ namespace Nethermind.Specs.ChainSpecStyle.Json
 
         public long? Eip3541Transition { get; set; }
 
-        // We explicitly want this to be enabled by default on all the networks 
+        // We explicitly want this to be enabled by default on all the networks
         // we can disable it if needed, but its expected not to cause issues
         public long? Eip3607Transition { get; set; } = 0;
 
@@ -136,6 +136,10 @@ namespace Nethermind.Specs.ChainSpecStyle.Json
         public ulong? Eip1153TransitionTimestamp { get; set; }
 
         public ulong? Eip3651TransitionTimestamp { get; set; }
+        public ulong? Eip3675TransitionTimestamp { get; set; }
+        public ulong? Eip3855TransitionTimestamp { get; set; }
+        public ulong? Eip3860TransitionTimestamp { get; set; }
+        public ulong? Eip4895TransitionTimestamp { get; set; }
 
         public ulong? Eip4844TransitionTimestamp { get; set; }
     }
