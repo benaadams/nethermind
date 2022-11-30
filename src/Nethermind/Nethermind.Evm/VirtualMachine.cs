@@ -1728,7 +1728,7 @@ namespace Nethermind.Evm
                                 return CallResult.InvalidInstructionException;
                             }
 
-                            if (!UpdateGas(GasCostOf.VeryLow, ref gasAvailable))
+                            if (!UpdateGas(GasCostOf.DataHash, ref gasAvailable))
                             {
                                 EndInstructionTraceError(EvmExceptionType.OutOfGas);
                                 return CallResult.OutOfGasException;

@@ -49,7 +49,7 @@ namespace Nethermind.Evm.Test
 
             result.StatusCode.Should().Be(StatusCode.Success);
             result.ReturnValue.SequenceEqual(expectedOutput);
-            AssertGas(result, GasCostOfCallingWrapper + GasCostOf.VeryLow);
+            AssertGas(result, GasCostOfCallingWrapper + GasCostOf.DataHash);
         }
 
         protected override TestAllTracerWithOutput CreateTracer()
