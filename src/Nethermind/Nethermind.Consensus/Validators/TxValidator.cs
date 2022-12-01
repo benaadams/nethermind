@@ -119,10 +119,12 @@ namespace Nethermind.Consensus.Validators
 
         private bool Validate4844Fields(Transaction transaction)
         {
+            const int maxblobsPerTx = 1 << 24;
             return transaction.Type != TxType.Blob ||
                 (
                     transaction.MaxFeePerDataGas is not null &&
-                    KzgPolynomialCommitments.IsAggregatedProofValid(transaction.Proof, transaction.Blobs, transaction.BlobKzgs)
+                    KzgPolynomialCommitments.IsAggregatedProofValid(transaction.Proof, transaction.Blobs, transaction.BlobKzgs) &&
+                    transaction.BlobVersionedHashes.Length < maxblobsPerTx
                 );
         }
     }

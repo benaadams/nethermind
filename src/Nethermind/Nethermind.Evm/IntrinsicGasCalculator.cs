@@ -93,8 +93,8 @@ namespace Nethermind.Evm
             return accessListCost;
         }
 
-        static UInt256 DataGasPriceUpdateFraction = 8902606;
-        static UInt256 MinDataGasPrice = (long)10e8;
+        static UInt256 DataGasPriceUpdateFraction = 2225652;
+        static UInt256 MinDataGasPrice = 1;
 
         // FakeExponential
         public static UInt256 BlobsGas(Transaction transaction, UInt256 parentExcessDataGas, IReleaseSpec releaseSpec)
@@ -132,7 +132,7 @@ namespace Nethermind.Evm
         }
 
         static UInt256 DataGasPerBlob = 1 << 17;
-        static UInt256 TargetDataGasPerBlock = 1 << 20;
+        static UInt256 TargetDataGasPerBlock = 1 << 18;
 
         public static UInt256 CalcExcessDataGas(UInt256? parentExcessDataGas, int newBlobs)
         {
