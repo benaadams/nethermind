@@ -35,8 +35,8 @@ namespace Nethermind.Evm.Test
             }
             byte[] expectedOutput = datahashesCount > index ? hashes[index] : new byte[32];
 
-            // Cost of transaction call + PUSH1 x4 + MSTORE
-            const long GasCostOfCallingWrapper = GasCostOf.Transaction + GasCostOf.VeryLow * 6;
+            // Cost of transaction call + PUSH1 x4 + MSTORE (entry cost + 1 memory cell used)
+            const long GasCostOfCallingWrapper = GasCostOf.Transaction + GasCostOf.VeryLow * 5 + GasCostOf.Memory;
 
             byte[] code = Prepare.EvmCode
                 .PushData(new UInt256((ulong)index))
