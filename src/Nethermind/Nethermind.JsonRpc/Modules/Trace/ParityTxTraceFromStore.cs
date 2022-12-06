@@ -29,7 +29,7 @@ namespace Nethermind.JsonRpc.Modules.Trace
 
         private static IEnumerable<ParityTxTraceFromStore> ReturnActionsRecursively(ParityLikeTxTrace txTrace, ParityTraceAction? txTraceAction)
         {
-            if (txTraceAction is not null)
+            if (txTraceAction is not null && txTraceAction.IncludeInTrace)
             {
                 ParityTxTraceFromStore result = new()
                 {
