@@ -118,6 +118,11 @@ namespace Nethermind.Evm.Tracing
         bool IsTracingAccess { get; }
 
         /// <summary>
+        /// Traces fees and burned fees
+        /// </summary>
+        bool IsTracingFees { get; }
+
+        /// <summary>
         /// Transaction completed successfully
         /// </summary>
         /// <param name="recipient">Transaction recipient</param>
@@ -198,7 +203,7 @@ namespace Nethermind.Evm.Tracing
             ReportStackPush(stackItem.ToArray().AsSpan());
         }
 
-        /// <summary>        
+        /// <summary>
         /// </summary>
         /// <param name="stackItem"></param>
         /// <remarks>Depends on <see cref="IsTracingInstructions"/></remarks>
@@ -265,7 +270,7 @@ namespace Nethermind.Evm.Tracing
             ReportMemoryChange(offset, data.ToArray());
         }
 
-        /// <summary>        
+        /// <summary>
         /// </summary>
         /// <param name="offset"></param>
         /// <param name="data"></param>
@@ -410,5 +415,6 @@ namespace Nethermind.Evm.Tracing
         /// <param name="accessedStorageCells">cell</param>
         /// <remarks>Depends on <see cref="IsTracingAccess"/></remarks>
         void ReportAccess(IReadOnlySet<Address> accessedAddresses, IReadOnlySet<StorageCell> accessedStorageCells);
+        void ReportFees(UInt256 fees, UInt256 burntFees);
     }
 }
