@@ -113,12 +113,12 @@ public class NewPayloadHandler : IAsyncHandler<ExecutionPayload, PayloadStatusV1
             return NewPayloadV1Result.Invalid(lastValidHash, $"Block {request} is known to be a part of an invalid chain.");
         }
 
-        if (!_blockValidator.ValidateWithdrawals(block, out var error))
-        {
-            if (_logger.IsWarn) _logger.Warn($"Invalid: {error}");
+        //if (!_blockValidator.ValidateWithdrawals(block, out var error))
+        //{
+        //    if (_logger.IsWarn) _logger.Warn($"Invalid: {error}");
 
-            return NewPayloadV1Result.Invalid(lastValidHash, error);
-        }
+        //    return NewPayloadV1Result.Invalid(lastValidHash, error);
+        //}
 
         if (block.Header.Number <= _syncConfig.PivotNumberParsed)
         {
