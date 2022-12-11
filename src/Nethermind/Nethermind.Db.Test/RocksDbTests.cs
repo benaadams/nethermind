@@ -1,7 +1,6 @@
-using System.Reflection;
+using FluentAssertions;
 using Nethermind.Db.Rocks;
 using NUnit.Framework;
-using RocksDbSharp;
 
 namespace Nethermind.Db.Test;
 
@@ -10,9 +9,6 @@ namespace Nethermind.Db.Test;
 public static class RocksDbTests
 {
     [Test]
-    public static void Should_have_required_version()
-    {
-        string version = DbOnTheRocks.GetRocksDbVersion();
-        Assert.AreEqual("7.7.3", $"{version}", "Unexpected RocksDB version");
-    }
+    public static void Should_have_required_version() =>
+        DbOnTheRocks.GetRocksDbVersion().Should().Be("7.7.3", "Unexpected RocksDB version");
 }
