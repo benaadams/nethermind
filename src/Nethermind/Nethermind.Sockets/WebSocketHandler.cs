@@ -21,87 +21,80 @@ namespace Nethermind.Sockets
             _logger = logManager?.GetClassLogger() ?? throw new ArgumentNullException(nameof(logManager));
         }
 
-        public Task SendRawAsync(ArraySegment<byte> data) =>
+        public ValueTask SendRawAsync(Memory<byte> data) =>
             _webSocket.State != WebSocketState.Open
-                ? Task.CompletedTask
+                ? ValueTask.CompletedTask
                 : _webSocket.SendAsync(data, WebSocketMessageType.Text, true, CancellationToken.None);
 
-        public async Task<ReceiveResult?> GetReceiveResult(ArraySegment<byte> buffer)
+        public async ValueTask<ReceiveResult> GetReceiveResult(Memory<byte> buffer)
         {
-            ReceiveResult? result = null;
+            ReceiveResult result = default;
             if (_webSocket.State == WebSocketState.Open)
             {
-                Task<WebSocketReceiveResult> resultTask = _webSocket.ReceiveAsync(buffer, CancellationToken.None);
-
-                await resultTask.ContinueWith(t =>
+                ValueTask<ValueWebSocketReceiveResult> resultTask = _webSocket.ReceiveAsync(buffer, CancellationToken.None);
+                try
                 {
-                    if (t.IsFaulted)
+                    ValueWebSocketReceiveResult t = await resultTask;
+                    result = new ReceiveResult
+                    (
+                        read: t.Count,
+                        endOfMessage: t.EndOfMessage,
+                        closed: t.MessageType == WebSocketMessageType.Close
+                    );
+                }
+                catch (Exception innerException)
+                {
+                    while (innerException?.InnerException is not null)
                     {
-                        Exception? innerException = t.Exception;
-                        while (innerException?.InnerException is not null)
-                        {
-                            innerException = innerException.InnerException;
-                        }
+                        innerException = innerException.InnerException;
+                    }
 
-                        if (innerException is SocketException socketException)
+                    if (innerException is SocketException socketException)
+                    {
+                        if (socketException.SocketErrorCode == SocketError.ConnectionReset)
                         {
-                            if (socketException.SocketErrorCode == SocketError.ConnectionReset)
-                            {
-                                if (_logger.IsTrace) _logger.Trace($"Client disconnected: {innerException.Message}.");
-                            }
-                            else
-                            {
-                                if (_logger.IsInfo) _logger.Info($"Not able to read from WebSockets ({socketException.SocketErrorCode}: {socketException.ErrorCode}). {innerException.Message}");
-                            }
-                        }
-                        else if (innerException is WebSocketException webSocketException)
-                        {
-                            if (webSocketException.WebSocketErrorCode == WebSocketError.ConnectionClosedPrematurely)
-                            {
-                                if (_logger.IsTrace) _logger.Trace($"Client disconnected: {innerException.Message}.");
-                            }
-                            else
-                            {
-                                if (_logger.IsInfo) _logger.Info($"Not able to read from WebSockets ({webSocketException.WebSocketErrorCode}: {webSocketException.ErrorCode}). {innerException.Message}");
-                            }
+                            if (_logger.IsTrace) _logger.Trace($"Client disconnected: {innerException.Message}.");
                         }
                         else
                         {
-                            if (_logger.IsInfo) _logger.Info($"Not able to read from WebSockets. {innerException?.Message}");
+                            if (_logger.IsInfo) _logger.Info($"Not able to read from WebSockets ({socketException.SocketErrorCode}: {socketException.ErrorCode}). {innerException.Message}");
                         }
-
-                        result = new WebSocketsReceiveResult() { Closed = true };
                     }
-
-                    if (t.IsCompletedSuccessfully)
+                    else if (innerException is WebSocketException webSocketException)
                     {
-                        result = new WebSocketsReceiveResult()
+                        if (webSocketException.WebSocketErrorCode == WebSocketError.ConnectionClosedPrematurely)
                         {
-                            Closed = t.Result.MessageType == WebSocketMessageType.Close,
-                            Read = t.Result.Count,
-                            EndOfMessage = t.Result.EndOfMessage,
-                            CloseStatus = t.Result.CloseStatus,
-                            CloseStatusDescription = t.Result.CloseStatusDescription
-                        };
+                            if (_logger.IsTrace) _logger.Trace($"Client disconnected: {innerException.Message}.");
+                        }
+                        else
+                        {
+                            if (_logger.IsInfo) _logger.Info($"Not able to read from WebSockets ({webSocketException.WebSocketErrorCode}: {webSocketException.ErrorCode}). {innerException.Message}");
+                        }
                     }
-                });
+                    else
+                    {
+                        if (_logger.IsInfo) _logger.Info($"Not able to read from WebSockets. {innerException?.Message}");
+                    }
+
+                    result = new ReceiveResult(closed: true);
+                }
             }
 
             return result;
         }
 
-        public Task CloseAsync(ReceiveResult? result)
+        public Task CloseAsync(ReceiveResult result)
         {
             if (_webSocket.State is WebSocketState.Open or WebSocketState.CloseSent)
             {
-                return _webSocket.CloseAsync(result is WebSocketsReceiveResult { CloseStatus: { } } r ? r.CloseStatus.Value : WebSocketCloseStatus.Empty,
-                    result?.CloseStatusDescription,
+                return _webSocket.CloseAsync(_webSocket.CloseStatus ?? WebSocketCloseStatus.Empty,
+                    _webSocket.CloseStatusDescription,
                     CancellationToken.None);
             }
 
             if (_webSocket.State is WebSocketState.CloseReceived)
             {
-                return _webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, result?.CloseStatusDescription,
+                return _webSocket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, _webSocket.CloseStatusDescription,
                     CancellationToken.None);
             }
 

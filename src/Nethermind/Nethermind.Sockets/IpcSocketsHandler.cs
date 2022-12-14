@@ -19,30 +19,32 @@ namespace Nethermind.Sockets
             _socket = socket;
         }
 
-        public Task SendRawAsync(ArraySegment<byte> data) =>
-            !_socket.Connected
-                ? Task.CompletedTask
-                : _socket.SendAsync(data, SocketFlags.None);
-
-        public async Task<ReceiveResult?> GetReceiveResult(ArraySegment<byte> buffer)
+        public async ValueTask SendRawAsync(Memory<byte> data)
         {
-            ReceiveResult? result = null;
+            if (_socket.Connected)
+            {
+                await _socket.SendAsync(data, SocketFlags.None);
+            }
+        }
+
+        public async ValueTask<ReceiveResult> GetReceiveResult(Memory<byte> buffer)
+        {
+            ReceiveResult result = default;
             if (_socket.Connected)
             {
                 int read = await _socket.ReceiveAsync(buffer, SocketFlags.None);
-                result = new ReceiveResult()
-                {
-                    Closed = read == 0,
-                    Read = read,
-                    EndOfMessage = read < buffer.Count || _socket.Available == 0,
-                    CloseStatusDescription = null
-                };
+                result = new ReceiveResult
+                (
+                    read: read,
+                    endOfMessage: read < buffer.Length || _socket.Available == 0,
+                    closed: read == 0
+                );
             }
 
             return result;
         }
 
-        public Task CloseAsync(ReceiveResult? result)
+        public Task CloseAsync(ReceiveResult result)
         {
             return Task.Factory.StartNew(_socket.Close);
         }

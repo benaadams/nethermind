@@ -33,11 +33,11 @@ namespace Nethermind.Sockets
 
         public virtual Task ProcessAsync(ArraySegment<byte> data) => Task.CompletedTask;
 
-        public virtual Task SendAsync(SocketsMessage message)
+        public async virtual Task SendAsync(SocketsMessage message)
         {
             if (message is null)
             {
-                return Task.CompletedTask;
+                return;
             }
 
             if (message.Client == ClientName || string.IsNullOrWhiteSpace(ClientName) ||
@@ -47,11 +47,11 @@ namespace Nethermind.Sockets
                 _jsonSerializer.Serialize(memoryStream, new { type = message.Type, client = ClientName, data = message.Data });
                 if (memoryStream.TryGetBuffer(out ArraySegment<byte> data))
                 {
-                    return _handler.SendRawAsync(data);
+                    await _handler.SendRawAsync(data);
                 }
             }
 
-            return Task.CompletedTask;
+            return;
         }
 
         public async Task ReceiveAsync()
@@ -59,12 +59,12 @@ namespace Nethermind.Sockets
             const int standardBufferLength = 1024 * 4;
             int currentMessageLength = 0;
             byte[] buffer = ArrayPool<byte>.Shared.Rent(standardBufferLength);
-            ReceiveResult? result = null;
 
+            ReceiveResult result = default;
             try
             {
                 result = await _handler.GetReceiveResult(buffer);
-                while (result?.Closed == false)
+                while (result.Closed == false)
                 {
                     currentMessageLength += result.Read;
 
@@ -100,7 +100,7 @@ namespace Nethermind.Sockets
                     }
 
                     // receive only new bytes, leave already filled buffer alone
-                    result = await _handler.GetReceiveResult(new ArraySegment<byte>(buffer, currentMessageLength, buffer.Length - currentMessageLength));
+                    result = await _handler.GetReceiveResult(new Memory<byte>(buffer, currentMessageLength, buffer.Length - currentMessageLength));
                 }
             }
             finally

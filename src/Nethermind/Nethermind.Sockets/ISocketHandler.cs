@@ -14,8 +14,8 @@ namespace Nethermind.Sockets
     /// </summary>
     public interface ISocketHandler : IDisposable
     {
-        Task SendRawAsync(ArraySegment<byte> data);
-        Task<ReceiveResult?> GetReceiveResult(ArraySegment<byte> buffer);
-        Task CloseAsync(ReceiveResult? result);
+        ValueTask SendRawAsync(Memory<byte> data);
+        ValueTask<ReceiveResult> GetReceiveResult(Memory<byte> buffer);
+        Task CloseAsync(ReceiveResult result);
     }
 }

@@ -7,11 +7,24 @@ using System.Linq;
 
 namespace Nethermind.Sockets
 {
-    public class ReceiveResult
+    public readonly struct ReceiveResult
     {
-        public int Read { get; init; }
-        public bool EndOfMessage { get; init; }
-        public bool Closed { get; init; }
-        public string? CloseStatusDescription { get; init; }
+        public readonly int Read;
+        public readonly bool EndOfMessage;
+        public readonly bool Closed;
+
+        public ReceiveResult(int read, bool endOfMessage, bool closed)
+        {
+            Read = read;
+            EndOfMessage = endOfMessage;
+            Closed = closed;
+        }
+
+        public ReceiveResult(bool closed)
+        {
+            Read = 0;
+            EndOfMessage = true;
+            Closed = closed;
+        }
     }
 }
