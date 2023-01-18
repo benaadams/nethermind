@@ -98,7 +98,7 @@ namespace Nethermind.Synchronization.Test.FastSync.SnapProtocolTests
 
             await _dispatcher.ExecuteDispatch(batch, 1);
 
-            batch.RequestedNodes.Count().Should().Be(6);
+            batch.RequestedNodes.Length.Should().Be(6);
             batch.RequestedNodes[0].Should().Be(item01);
             batch.RequestedNodes[1].Should().Be(item03);
             batch.RequestedNodes[2].Should().Be(item02);

@@ -146,7 +146,7 @@ namespace Nethermind.KeyStore.Test
 
                 (IReadOnlyCollection<Address> addresses, Result getAllResult) = test.Store.GetKeyAddresses();
                 Assert.AreEqual(ResultType.Success, getAllResult.ResultType, "get key");
-                Assert.IsTrue(addresses.Count() >= 2);
+                Assert.IsTrue(addresses.Count >= 2);
                 Assert.IsNotNull(addresses.FirstOrDefault(x => x.Equals(key1.Address)), "key 1 not null");
                 Assert.IsNotNull(addresses.FirstOrDefault(x => x.Equals(key2.Address)), "key 2 not null");
 

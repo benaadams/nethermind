@@ -62,7 +62,7 @@ namespace Nethermind.Config.Test
             Assert.AreEqual(100, keystoreConfig.KdfparamsDklen);
             Assert.AreEqual("test", keystoreConfig.Cipher);
 
-            Assert.AreEqual(2, jsonRpcConfig.EnabledModules.Count());
+            Assert.AreEqual(2, jsonRpcConfig.EnabledModules.Length);
 
             void CheckIfEnabled(string x)
             {
