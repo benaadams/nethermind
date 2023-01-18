@@ -187,7 +187,7 @@ namespace Nethermind.Core
             return indexes;
         }
 
-        public struct BloomExtract
+        public readonly struct BloomExtract
         {
             public BloomExtract(int index1, int index2, int index3)
             {
